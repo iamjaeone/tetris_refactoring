@@ -1,3 +1,5 @@
+#include "../inc/cell.h"
+
 // ----------------------------------
 // 테트리스의 표준적인 게임 필드 크기는 가로 10블록, 세로 20블록입니다.
 #define BOARD_WIDTH 10 + 2 // 2가 늘어난것은 왼쪽 오른쪽 Wall Cell이다.
@@ -78,11 +80,6 @@ void board_display_info(cell_t board[BOARD_HEIGHT][BOARD_WIDTH]) {
         printf("\r\n");
     }
 }
-
-#define DIR_UP 1
-#define DIR_DOWN 2
-#define DIR_LEFT 3
-#define DIR_RIGHT 4
 
 // 블럭을 움직이는 아주 기본적인 함수
 // 충돌 체크를 하지 않는다. 충돌체크를 해보자.
