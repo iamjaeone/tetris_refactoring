@@ -1,8 +1,4 @@
-typedef struct _cell_t {
-    point_t point; // cell의 위치
-    color_t color; // cell의 색상
-    cell_attributes_t att; // cell의 속성
-} cell_t;
+#include "cell.h"
 
 void cell_init(cell_t* cell, int x, int y, cell_attributes_t att, color_t color) {
     cell->point.x = x;
