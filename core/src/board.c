@@ -33,29 +33,49 @@ void board_display_info(cell_t board[BOARD_HEIGHT][BOARD_WIDTH]) {
 	}
 }
 
-int hasCollision(cell_t board[BOARD_HEIGHT][BOARD_WIDTH], block_t* block) {
-	int flag = 0;
+int hasCollision(cell_t board[BOARD_HEIGHT][BOARD_WIDTH], block_t* curBlock, block_t* chgBlock) {
+	// 현재 블록 삭제
 	for (int r = 0; r < BLOCK_HEIGHT; r++) {
 		for (int c = 0; c < BLOCK_WIDTH; c++) {
-			int block_val = block->att[block->rotation_index][r][c];
+			int block_val = curBlock->att[curBlock->rotation_index][r][c];
+			if (block_val == 0) continue;
+			board[curBlock->y + r][curBlock->x + c].att = 0;
+		}
+	}
+
+	// 변화된 블록 충돌 확인
+	int collision = 0;
+	for (int r = 0; r < BLOCK_HEIGHT; r++) {
+		for (int c = 0; c < BLOCK_WIDTH; c++) {
+			int block_val = chgBlock->att[chgBlock->rotation_index][r][c];
 			if (block_val == 0) continue;
 
-			int board_y = block->y + r;
-			int board_x = block->x + c;
-			if (board_y < 0 || board_y >= BOARD_HEIGHT || board_x < 0 || board_x >= BOARD_WIDTH) {
-				flag = 1;
+			int board_r = chgBlock->y + r;
+			int board_c = chgBlock->x + c;
+			if (board_r < 0 || board_r >= BOARD_HEIGHT || board_c < 0 || board_c >= BOARD_WIDTH) {
+				collision = 1;
 				break;
 			}
 
-			int board_val = board[board_y][board_x].att;
+			int board_val = board[board_r][board_c].att;
 			if (board_val != 0) {
-				flag = 1;
+				collision = 1;
 				break;
 			}
 		}
-		if (flag) break;
+		if (collision) break;
 	}
-	return flag;
+
+	// 현재 블록 복구
+	for (int r = 0; r < BLOCK_HEIGHT; r++) {
+		for (int c = 0; c < BLOCK_WIDTH; c++) {
+			int block_val = curBlock->att[curBlock->rotation_index][r][c];
+			if (block_val == 0) continue;
+			board[curBlock->y + r][curBlock->x + c].att = block_val;
+		}
+	}
+
+	return collision;
 }
 
 // 블럭을 움직이는 아주 기본적인 함수
@@ -63,54 +83,35 @@ int hasCollision(cell_t board[BOARD_HEIGHT][BOARD_WIDTH], block_t* block) {
 // moveBlockOnBaord, move_block_on_board
 //board_move_block(&console, gboard, &my_block, DIR_UP);
 void board_move_block(windows_console_t* console, cell_t board[BOARD_HEIGHT][BOARD_WIDTH], block_t* block, uint8_t dir) {
-	for (int r = 0; r < BLOCK_HEIGHT; r++) {
-		for (int c = 0; c < BLOCK_WIDTH; c++) {
-			int block_val = block->att[block->rotation_index][r][c];
-			if (block_val == 0) continue;
-			board[block->y + r][block->x + c].att = 0;
-		}
-	}
-
-	block_t newBlock = *block;
+	block_t chgBlock = *block;
 
 	switch (dir) {
 	case DIR_UP:
-		newBlock.y--;
+		chgBlock.y--;
 		break;
 
 	case DIR_DOWN:
-		newBlock.y++;
+		chgBlock.y++;
 		break;
 
 	case DIR_LEFT:
-		newBlock.x--;
+		chgBlock.x--;
 		break;
 
 	case DIR_RIGHT:
-		newBlock.x++;
+		chgBlock.x++;
 		break;
 
 	}
 
-	int flag = hasCollision(board, &newBlock);
+	if (hasCollision(board, block, &chgBlock)) return;
 
-	if (flag) {
-		for (int r = 0; r < BLOCK_HEIGHT; r++) {
-			for (int c = 0; c < BLOCK_WIDTH; c++) {
-				int block_val = block->att[block->rotation_index][r][c];
-				if (block_val == 0) continue;
-				board[block->y + r][block->x + c].att = block_val;
-			}
-		}
-	}
-	else {
-		block->y = newBlock.y;
-		block->x = newBlock.x;
+	block->y = chgBlock.y;
+	block->x = chgBlock.x;
 
-		board_clear_data(board);
-		board_insert_block(board, block, block->x, block->y);
-		board_draw(console, board);
-	}
+	board_clear_data(board);
+	board_insert_block(board, block, block->x, block->y);
+	board_draw(console, board);
 }
 
 //void board_move_block(windows_console_t* console, cell_t board[BOARD_HEIGHT][BOARD_WIDTH], block_t* block, uint8_t dir) {
@@ -119,11 +120,11 @@ void board_move_block(windows_console_t* console, cell_t board[BOARD_HEIGHT][BOA
 
 // rotateBlockOnBoard, roate_block_on_board
 void board_rotate_block(windows_console_t* console, cell_t board[BOARD_HEIGHT][BOARD_WIDTH], block_t* block) {
-	block_t newBlock = *block;
-	block_rotate(&newBlock);
-	int flag = hasCollision(board, &newBlock);
+	block_t chgBlock = *block;
+	block_rotate(&chgBlock);
 
-	if (flag) return;
+	if (hasCollision(board, block, &chgBlock)) return;
+
 	block_rotate(block);
 	board_clear_data(board);
 	board_insert_block(board, block, block->x, block->y);
@@ -186,11 +187,11 @@ void board_insert_block(cell_t board[BOARD_HEIGHT][BOARD_WIDTH], block_t* block,
 
 	for (int i = 0; i < BLOCK_HEIGHT; i++) {
 		for (int j = 0; j < BLOCK_WIDTH; j++) {
-			int curR = block->y + i;
-			int curC = block->x + j;
-			if (curR < 0 || curR >= BOARD_HEIGHT || curC < 0 || curC >= BOARD_WIDTH) continue;
-			if (board[curR][curC].att != 0) continue;
-			board[curR][curC].att = block->att[block->rotation_index][i][j];
+			int board_y = block->y + i;
+			int board_x = block->x + j;
+			if (board_y < 0 || board_y >= BOARD_HEIGHT || board_x < 0 || board_x >= BOARD_WIDTH) continue;
+			if (board[board_y][board_x].att != 0) continue;
+			board[board_y][board_x].att = block->att[block->rotation_index][i][j];
 			//printf("block pos(x,y)=(%02d,%02d)\r\n", block->x, block -> y);
 			//printf("(%d,%d)=%d,", i, j, block->att[block->rotation_index][i][j]);
 		}
