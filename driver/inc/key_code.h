@@ -1,3 +1,5 @@
+#pragma once
+
 #define _CRT_SECURE_NO_WARNINGS // VS 경고 때문에 적어놓은것임
 
 #ifndef __KEY_CODE_H__

@@ -1,9 +1,14 @@
+#pragma once
 #ifndef __BLOCKS_H__
 #define __BLOCKS_H__
 
+#include <string.h>
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdint.h>
+
+#include "color.h"
+#include "../../driver/inc/cursor.h"
 //#define MAX_BLOCK_COUNT 7
 
 #define BLOCK_WIDTH 4
