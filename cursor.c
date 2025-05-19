@@ -1,8 +1,4 @@
-typedef struct _cursor_info_t {
-    uint32_t x;
-    uint32_t y;
-    bool is_hide;
-} cursor_info_t;
+#include "cursor.h"
 
 // 커서의 숨김,표시 정보를 가져오는 함수
 bool get_cursor_visibility(void) {
