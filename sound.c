@@ -1,6 +1,4 @@
-#include <windows.h>
-#include <mmsystem.h>
-#include <stdio.h>
+#include "sound.h"
 
 void sound_init(const char file_name) {
 
