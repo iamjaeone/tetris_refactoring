@@ -1,0 +1,36 @@
+# Visual Studio 관련 파일/폴더 무시
+.vs/
+*.user
+*.suo
+*.VC.db
+*.VC.opendb
+
+# 빌드 결과물 무시
+Debug/
+x64/
+Release/
+*.exe
+*.obj
+*.pdb
+*.ilk
+*.log
+
+# C/C++ 컴파일러 관련 임시 파일
+*.idb
+*.aps
+*.ncb
+*.opendb
+
+# 중간 파일 무시
+*.tlog
+*.ipch
+*.cache
+*.db
+
+# 기타
+*.wav
+
+# CMake나 다른 빌드 시스템을 사용하는 경우 (해당 시 활성화)
+# CMakeFiles/
+# CMakeCache.txt
+# build/
