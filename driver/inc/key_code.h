@@ -8,29 +8,31 @@
 #include <stdio.h>
 #include <stdint.h>
 
-#ifdef __MSC__
-#include <conio.h>  // _getch(), _Kbhit qqq 이식성을 위해 제거하자
+// MSVC 컴파일러 감지 매크로 변경 (더 일반적인 _MSC_VER 사용)
+#ifdef _MSC_VER
+// #include <conio.h>  // _getch(), _kbhit 등 이식성을 위해 제거함
 #endif
 
-#define EXT_CODE_1		(0x00) // 확장키가 00인 키값이 있고.. F1, F2, F3
-#define EXT_CODE_2		(0xE0) // 확장키가 E0인 키값이 있다.. Up, Down, Left, Right..
+// 확장키 구분 값
+#define EXT_CODE_1		(0x00)   // 확장키 0x00 : F1~F10 등의 함수키군에 사용됨
+#define EXT_CODE_2		(0xE0)   // 확장키 0xE0 : 방향키, Insert/Delete/Home 등 키군에 사용됨
 
-// 0,1,2,...9
-#define KEY_0			(0x30) // Decimal 48  // 키패드의 0과 이 qwer위에 있는 0과는 키값이 다르다.
-#define KEY_1			(KEY_0+1) // 49
-#define KEY_2			(KEY_0+2) // 50
-#define KEY_3			(KEY_0+3) // 51
-#define KEY_4			(KEY_0+4) // 52
-#define KEY_5			(KEY_0+5)
-#define KEY_6			(KEY_0+6)
-#define KEY_7			(KEY_0+7)
-#define KEY_8			(KEY_0+8)
-#define KEY_9			(KEY_0+9) 
+// 숫자 키 0~9 (ASCII 코드 0x30~0x39)
+//#define KEY_0			(0x30) // Decimal 48  
+//#define KEY_1			(KEY_0+1) // 49
+//#define KEY_2			(KEY_0+2) // 50
+//#define KEY_3			(KEY_0+3) // 51
+//#define KEY_4			(KEY_0+4) // 52
+//#define KEY_5			(KEY_0+5)
+//#define KEY_6			(KEY_0+6)
+//#define KEY_7			(KEY_0+7)
+//#define KEY_8			(KEY_0+8)
+//#define KEY_9			(KEY_0+9) 
 
-// a,b,c,d... z
+// 소문자 a~z (ASCII 0x61~0x7A)
 #define KEY_a           (0x61)
 #define KEY_b           (KEY_a+1)
-#define KEY_c           (KEY_a+2) // KEY_a+1, KEY_a+2, KEY_a+3, 와 같이 나간다.
+#define KEY_c           (KEY_a+2)
 #define KEY_d           (KEY_a+3)
 #define KEY_e           (KEY_a+4)
 #define KEY_f           (KEY_a+5)
@@ -55,10 +57,10 @@
 #define KEY_y           (KEY_a+24)
 #define KEY_z           (KEY_a+25)
 
-// A,B,C,D,...Z
+// 대문자 A~Z (ASCII 0x41~0x5A), 소문자와 0x20 차이
 #define KEY_A           (KEY_a-0x20)
 #define KEY_B           (KEY_b-0x20)
-#define KEY_C           (KEY_c-0x20) // KEY_a-0x20, KEY_b-0x20, KEY_c-0x20,.. 과 같이 나간다.
+#define KEY_C           (KEY_c-0x20)
 #define KEY_D           (KEY_d-0x20)
 #define KEY_E           (KEY_e-0x20)
 #define KEY_F           (KEY_f-0x20)
@@ -83,38 +85,45 @@
 #define KEY_Y           (KEY_y-0x20)
 #define KEY_Z           (KEY_z-0x20)
 
-// F1,F2,F3...F12
-#define	KEY_F1			(0x3B | (EXT_CODE_1 << 8)) // 003B
-#define KEY_F2			(0x3C | (EXT_CODE_1 << 8)) // 003C
-#define KEY_F3			(0x3D | (EXT_CODE_1 << 8)) // 003D
-#define KEY_F4			(0x3E | (EXT_CODE_1 << 8)) // 003E
+// 함수키 F1~F10: 확장키 0x00 (EXT_CODE_1) + 키코드
+// _getch() 두 번 호출시 첫 값 0x00, 두 번째 값 0x3B~0x44 범위
+#define	KEY_F1			(0x3B | (EXT_CODE_1 << 8)) // 0x003B
+#define KEY_F2			(0x3C | (EXT_CODE_1 << 8)) 
+#define KEY_F3			(0x3D | (EXT_CODE_1 << 8))
+#define KEY_F4			(0x3E | (EXT_CODE_1 << 8))
 #define KEY_F5			(0x3F | (EXT_CODE_1 << 8))
 #define KEY_F6			(0x40 | (EXT_CODE_1 << 8))
-#define KEY_F7			(0x41 | (EXT_CODE_1 << 8)) // 0x41과 값이 겹친다?
+#define KEY_F7			(0x41 | (EXT_CODE_1 << 8))
 #define KEY_F8			(0x42 | (EXT_CODE_1 << 8))
 #define KEY_F9			(0x43 | (EXT_CODE_1 << 8))
 #define KEY_F10			(0x44 | (EXT_CODE_1 << 8))
-#define KEY_F11			(0x85 | (EXT_CODE_2 << 8)) // 45가 아니다! 85? 57? 대체 모야? E085
-#define KEY_F12			(0x86 | (EXT_CODE_2 << 8))
 
+// F11, F12: 확장키 0xE0 (EXT_CODE_2) + 키코드 0x85, 0x86 (일부 환경)
+// _getch() 첫 호출 224(0xE0), 두 번째 호출 0x85, 0x86
+#define KEY_F11			(0x85 | (EXT_CODE_2 << 8)) // 0xE085
+#define KEY_F12			(0x86 | (EXT_CODE_2 << 8)) // 0xE086
 
-// INS,DEL,HOME...
-#define KEY_INS         (0x52 | (EXT_CODE_2 << 8)) 
-#define KEY_DEL         (0x53 | (EXT_CODE_2 << 8))
-#define KEY_HOME        (0x47 | (EXT_CODE_2 << 8))
-#define KEY_END         (0x4F | (EXT_CODE_2 << 8))
-#define KEY_PAGE_UP     (0x49 | (EXT_CODE_2 << 8))
-#define KEY_PAGE_DOWN   (0x51 | (EXT_CODE_2 << 8))
+// 편집 및 네비게이션 키 (확장키 0xE0 + 키코드)
+#define KEY_INS         (0x52 | (EXT_CODE_2 << 8)) // Insert
+#define KEY_DEL         (0x53 | (EXT_CODE_2 << 8)) // Delete
+#define KEY_HOME        (0x47 | (EXT_CODE_2 << 8)) // Home
+#define KEY_END         (0x4F | (EXT_CODE_2 << 8)) // End
+#define KEY_PAGE_UP     (0x49 | (EXT_CODE_2 << 8)) // Page Up
+#define KEY_PAGE_DOWN   (0x51 | (EXT_CODE_2 << 8)) // Page Down
 
-//Up, Down, Left, Right
-#define KEY_UP          (0x48 | (EXT_CODE_2 << 8))
-#define KEY_DOWN        (0x50 | (EXT_CODE_2 << 8))
-#define KEY_LEFT        (0x4B | (EXT_CODE_2 << 8))
-#define KEY_RIGHT       (0x4D | (EXT_CODE_2 << 8))
+// 방향키 (확장키 0xE0 + 키코드)
+//#define KEY_UP          (0x48 | (EXT_CODE_2 << 8)) // Up Arrow
+//#define KEY_DOWN        (0x50 | (EXT_CODE_2 << 8)) // Down Arrow
+//#define KEY_LEFT        (0x4B | (EXT_CODE_2 << 8)) // Left Arrow
+//#define KEY_RIGHT       (0x4D | (EXT_CODE_2 << 8)) // Right Arrow
+#define KEY_DOWN        (0x32) // Down Arrow
+#define KEY_UP          (0x38) // Up Arrow
+#define KEY_LEFT        (0x34) // Left Arrow
+#define KEY_RIGHT       (0x36) // Right Arrow
 
-// ESC, ENTER, SAPCE
-#define KEY_ESC         (0x1B) // ESC가 특수키가 아니었어?
-#define KEY_ENTER       (0x0D)
-#define KEY_SPACE       (0x20)
+// 기타 특수키 (1바이트)
+#define KEY_ESC         (0x1B) // ESC는 확장키 아님, 단일 바이트 0x1B
+#define KEY_ENTER       (0x0D) // Enter(캐리지 리턴)
+#define KEY_SPACE       (0x20) // 스페이스
 
-#endif
+#endif // __KEY_CODE_H__

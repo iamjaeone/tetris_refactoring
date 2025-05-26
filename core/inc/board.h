@@ -21,9 +21,10 @@ void board_draw(windows_console_t* console, cell_t board[BOARD_HEIGHT][BOARD_WID
 void board_clear_data(cell_t board[BOARD_HEIGHT][BOARD_WIDTH]);
 void board_insert_block(cell_t board[BOARD_HEIGHT][BOARD_WIDTH], block_t* block, int block_x, int block_y);
 
-void board_move_block(windows_console_t* console, cell_t board[BOARD_HEIGHT][BOARD_WIDTH], block_t* block, uint8_t dir);
-void board_roate_block(block_t* block);
+bool board_move_block(windows_console_t* console, cell_t board[BOARD_HEIGHT][BOARD_WIDTH], block_t* block, uint8_t dir);
+void board_rotate_block(windows_console_t* console, cell_t board[BOARD_HEIGHT][BOARD_WIDTH], block_t* block);
 void board_draw(windows_console_t* console, cell_t board[BOARD_HEIGHT][BOARD_WIDTH]);
 void board_insert_cell(cell_t board[BOARD_HEIGHT][BOARD_WIDTH], cell_t* cell, int cell_x, int cell_y);
 void board_clear_data(cell_t board[BOARD_HEIGHT][BOARD_WIDTH]);
+void board_change_N_to_F(cell_t board[BOARD_HEIGHT][BOARD_WIDTH]);
 void board_insert_block(cell_t board[BOARD_HEIGHT][BOARD_WIDTH], block_t* block, int block_x, int block_y);

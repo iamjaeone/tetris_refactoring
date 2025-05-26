@@ -82,7 +82,7 @@ int hasCollision(cell_t board[BOARD_HEIGHT][BOARD_WIDTH], block_t* curBlock, blo
 // 충돌 체크를 하지 않는다. 충돌체크를 해보자.
 // moveBlockOnBaord, move_block_on_board
 //board_move_block(&console, gboard, &my_block, DIR_UP);
-void board_move_block(windows_console_t* console, cell_t board[BOARD_HEIGHT][BOARD_WIDTH], block_t* block, uint8_t dir) {
+bool board_move_block(windows_console_t* console, cell_t board[BOARD_HEIGHT][BOARD_WIDTH], block_t* block, uint8_t dir) {
 	block_t chgBlock = *block;
 
 	switch (dir) {
@@ -104,7 +104,7 @@ void board_move_block(windows_console_t* console, cell_t board[BOARD_HEIGHT][BOA
 
 	}
 
-	if (hasCollision(board, block, &chgBlock)) return;
+	if (hasCollision(board, block, &chgBlock)) return false;
 
 	block->y = chgBlock.y;
 	block->x = chgBlock.x;
@@ -112,6 +112,8 @@ void board_move_block(windows_console_t* console, cell_t board[BOARD_HEIGHT][BOA
 	board_clear_data(board);
 	board_insert_block(board, block, block->x, block->y);
 	board_draw(console, board);
+
+	return true;
 }
 
 //void board_move_block(windows_console_t* console, cell_t board[BOARD_HEIGHT][BOARD_WIDTH], block_t* block, uint8_t dir) {
@@ -156,6 +158,12 @@ void board_draw(windows_console_t* console, cell_t board[BOARD_HEIGHT][BOARD_WID
 				cell_draw(&board[i][j], board[i][j].point.x, board[i][j].point.y);
 				console_set_default_color(console);
 				break;
+
+			case F:
+				console_set_fore_color(console, BLUE);
+				cell_draw(&board[i][j], board[i][j].point.x, board[i][j].point.y);
+				console_set_default_color(console);
+				break;
 			}
 		}
 	}
@@ -175,6 +183,16 @@ void board_clear_data(cell_t board[BOARD_HEIGHT][BOARD_WIDTH]) {
 		for (int j = 0; j < BOARD_WIDTH; j++) {
 			if (board[i][j].att == N) {
 				board[i][j].att = E;
+			}
+		}
+	}
+}
+
+void board_change_N_to_F(cell_t board[BOARD_HEIGHT][BOARD_WIDTH]) {
+	for (int i = 0; i < BOARD_HEIGHT; i++) {
+		for (int j = 0; j < BOARD_WIDTH; j++) {
+			if (board[i][j].att == N) {
+				board[i][j].att = F;
 			}
 		}
 	}

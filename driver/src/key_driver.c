@@ -61,7 +61,7 @@ uint16_t key_read() {
 
     switch (key_code) {
         // 0,1,2,3,... 
-        case KEY_1: key_print(key_code); break;
+ /*       case KEY_1: key_print(key_code); break;
         case KEY_2: key_print(key_code); break;
         case KEY_3: key_print(key_code); break;
         case KEY_4: key_print(key_code); break;
@@ -69,7 +69,7 @@ uint16_t key_read() {
         case KEY_6: key_print(key_code); break;
         case KEY_7: key_print(key_code); break;
         case KEY_8: key_print(key_code); break;
-        case KEY_9: key_print(key_code); break;
+        case KEY_9: key_print(key_code); break;*/
 
         // a,b,c,d,...
         case KEY_a: case KEY_A: key_print(key_code); break;

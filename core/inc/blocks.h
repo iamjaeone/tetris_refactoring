@@ -19,6 +19,7 @@ typedef enum _cell_attributes_t {
 	E, // 비었음 empty
 	W, // 벽, 없앨수 없음
 	N, // 없앨수 있는 일반적인 셀
+	F, // 안착 블록
 } cell_attributes_t;
 
 //"#define 블럭이화면오른쪽으로갈수있는최대값 100" 이 정의에서 블럭이화면오른쪽으로갈수있는최대값을 뭐라고 작명하면 좋을까?
@@ -42,13 +43,13 @@ typedef enum _block_shapes_t {
 } block_shapes_t;
 
 typedef enum _block_color_t {
-	COLOR_CYAN= 3,      // 하늘색
-	COLOR_BLUE= 1,      // 파란색
-	COLOR_ORANGE= 12,    // 주황색이 없어서..
-	COLOR_YELLOW= 14,    // 노란색
-	COLOR_GREEN= 2,     // 초록색
-	COLOR_PURPLE= 5,    // 보라색
-	COLOR_RED=4        // 빨간색
+	COLOR_CYAN = 3,      // 하늘색
+	COLOR_BLUE = 1,      // 파란색
+	COLOR_ORANGE = 12,    // 주황색이 없어서..
+	COLOR_YELLOW = 14,    // 노란색
+	COLOR_GREEN = 2,     // 초록색
+	COLOR_PURPLE = 5,    // 보라색
+	COLOR_RED = 4        // 빨간색
 } block_color_t;
 
 

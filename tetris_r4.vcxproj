@@ -135,7 +135,8 @@
     <ClCompile Include="driver\src\cursor.c" />
     <ClCompile Include="driver\src\key_driver.c" />
     <ClCompile Include="driver\src\sound.c" />
-    <ClCompile Include="main.c" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Tetris.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core\inc\blocks.h" />
@@ -148,6 +149,7 @@
     <ClInclude Include="driver\inc\key_code.h" />
     <ClInclude Include="driver\inc\key_config.h" />
     <ClInclude Include="driver\inc\key_driver.h" />
+    <ClInclude Include="Game.h" />
     <ClInclude Include="model.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
