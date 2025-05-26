@@ -80,7 +80,10 @@
     <ClInclude Include="model.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Game.h">
+    <ClInclude Include="IGame.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Tetris.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

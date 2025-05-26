@@ -149,8 +149,9 @@
     <ClInclude Include="driver\inc\key_code.h" />
     <ClInclude Include="driver\inc\key_config.h" />
     <ClInclude Include="driver\inc\key_driver.h" />
-    <ClInclude Include="Game.h" />
+    <ClInclude Include="IGame.h" />
     <ClInclude Include="model.h" />
+    <ClInclude Include="Tetris.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
